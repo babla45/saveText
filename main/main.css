@@ -3,31 +3,38 @@ body{
   font-family: Arial, sans-serif;
   text-align: center;
   margin: 25px;
+  background-color: rgb(231, 225, 225);
+  /* background-color: rgb(245, 242, 242); */
 }
   
 textarea{
   width: 90%;
   min-height: 150px;
   padding: 10px;
-  margin: 10px 10px;
+  margin: 10px;
+  border: none;
+  box-shadow: inset 1px 1px 2px 2px rgb(154, 21, 70),
+  2px 2px 5px green;
   text-align: center;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 20px;
   resize: vertical; /* Allow vertical resizing only */
 }
   
-button {
-  padding: 10px 20px;
+.btn {
+  padding: 8px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   background-color: #000000;
   color: white;
-  font-size: 16px;
+  font-size: 13px;
   cursor: pointer;
+  box-shadow: inset 1px 1px 2px 2px rgb(154, 21, 70),
+  2px 2px 5px green;
 }
   
 button:hover {
-  background-color: #0056b3;
+  background-color: #c20d16;
+  font-size: 15px;
 }
   
 /* Main App Styles */
@@ -36,14 +43,17 @@ button:hover {
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  margin: 10px 0;
+  margin: 20px 0;
   padding: 10px;
   min-height: 110px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  border: none;
+  border-radius: 12px;
+  background-color: #fefefe;
   position: relative;
   overflow: hidden;
+  /* font-weight: bold; */
+  box-shadow:  -1px -1px 4px rgb(14, 169, 146),
+                1px 1px 4px rgb(236, 67, 10);
 }
   
 .text-entry span {
@@ -58,7 +68,7 @@ button:hover {
   display: flex;
   flex-direction: column;
   position: absolute;
-  right: 10px;
+  right: 0px;
   top: 50%;
   transform: translateY(-50%);
 }
