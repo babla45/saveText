@@ -1,80 +1,29 @@
-<!-- main.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Main App</title>
-  <!-- Include Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyADeJi7Qnvdxyel_DDiQlU39N2htEi9xCU",
-      authDomain: "savetextwebapp.firebaseapp.com",
-      databaseURL: "https://savetextwebapp-default-rtdb.firebaseio.com",
-      projectId: "savetextwebapp",
-      storageBucket: "savetextwebapp.appspot.com",
-      messagingSenderId: "1091844674985",
-      appId: "1:1091844674985:web:0c4edde3484433df6160b8",
-      measurementId: "G-C4FD899SCE"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const auth = getAuth();
-
-    // Redirect to the sign-in page if the user is not authenticated
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        window.location.href = "index.html";
-      } else {
-        displayText();
-      }
-    });
-
-    window.saveText = function() {
-      const userText = document.getElementById('userInput').value;
-      const textsRef = ref(database, 'texts/');
-
-      push(textsRef, { content: userText })
-        .then(() => {
-          console.log('Text saved!');
-          displayText();
-        })
-        .catch(error => console.error('Error writing to database:', error));
-    };
-
-    window.displayText = function() {
-      const displayDiv = document.getElementById('displayText');
-      const textsRef = ref(database, 'texts/');
-
-      onValue(textsRef, (snapshot) => {
-        displayDiv.innerHTML = ''; 
-        snapshot.forEach(childSnapshot => {
-          const data = childSnapshot.val();
-          displayDiv.innerHTML += `<p>${data.content}</p>`;
-        });
-      });
-    };
-
-    window.signOutUser = function() {
-      signOut(auth).then(() => {
-        alert("Signed out successfully!");
-        window.location.href = "index.html";
-      }).catch((error) => {
-        console.error("Error signing out:", error);
-      });
-    };
-  </script>
+  <link rel="stylesheet" href="main.css">
+  <script type="module" src="main.js"></script>
 </head>
 <body>
-  <h1>Welcome to the Main App</h1>
+
+  <h1 id="userEmail">Loading...</h1>
+
+  <!-- ---text area-- -->
+  <textarea id="userInput" placeholder="Enter text here"></textarea>
+
+  <!-- sign out button -->
   <button onclick="signOutUser()">Sign Out</button>
-  <input type="text" id="userInput" placeholder="Enter text here">
+  <!-- ---save text button-- -->
   <button onclick="saveText()">Save Text</button>
+  <!-- ----clear button --- -->
+  <button onclick="document.getElementById('userInput').value = '';">Clear</button>
+  
+  <!-- display div  -->
   <div id="displayText"></div>
+  
+
 </body>
 </html>
