@@ -17,8 +17,6 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const auth = getAuth();
 
-
-
 onAuthStateChanged(auth, (user) => {
   if (!user) {
     window.location.href = "index.html";
@@ -28,24 +26,36 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-
-
 window.saveText = function() {
   const userText = document.getElementById('userInput').value;
+  const textKey = document.getElementById('userInput').dataset.key; // Get the key if editing
   const user = getAuth().currentUser;
   
   if (user) {
     const userUid = user.uid;
     const textsRef = ref(database, `texts/${userUid}`);
-    
-    push(textsRef, { content: userText })
-      .then(() => {
-        console.log('Text saved!');
-        displayText(); // Display user-specific text
-      })
-    .catch(error => console.error('Error writing to database:', error));
-  } 
-  else {
+
+    if (textKey) {
+      // If we are editing an existing entry, update it
+      update(ref(database, `texts/${userUid}/${textKey}`), { content: userText })
+        .then(() => {
+          console.log('Text updated!');
+          document.getElementById('userInput').value = '';
+          document.getElementById('userInput').dataset.key = ''; // Clear the key after editing
+          displayText();
+        })
+        .catch(error => console.error('Error updating the text:', error));
+    } else {
+      // If it's a new entry, push it to the database
+      push(textsRef, { content: userText })
+        .then(() => {
+          console.log('Text saved!');
+          document.getElementById('userInput').value = ''; // Clear input after saving
+          displayText(); // Display user-specific text
+        })
+        .catch(error => console.error('Error writing to database:', error));
+    }
+  } else {
     alert("User not authenticated.");
   }
 };
@@ -60,9 +70,14 @@ window.displayText = function() {
     
     onValue(textsRef, (snapshot) => {
       displayDiv.innerHTML = ''; // Clear the display area first
+      const textsArray = [];
       snapshot.forEach(childSnapshot => {
-        const data = childSnapshot.val();
-        const textKey = childSnapshot.key;
+        textsArray.push({ key: childSnapshot.key, ...childSnapshot.val() });
+      });
+
+      // Reverse the order to show latest entry at the top
+      textsArray.reverse().forEach((data) => {
+        const textKey = data.key;
 
         const childDiv = document.createElement('div');
         childDiv.className = 'text-entry';
@@ -96,7 +111,7 @@ window.displayText = function() {
         editButton.className = 'edit-button';
         editButton.onclick = function() {
           document.getElementById('userInput').value = data.content;
-          document.getElementById('userInput').dataset.key = textKey;
+          document.getElementById('userInput').dataset.key = textKey; // Store the key in the input field for editing
         };
 
         iconContainer.appendChild(copyButton);

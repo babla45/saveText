@@ -10,6 +10,7 @@ textarea{
   min-height: 150px;
   padding: 10px;
   margin: 10px 10px;
+  text-align: center;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical; /* Allow vertical resizing only */
@@ -34,6 +35,7 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: center;
   margin: 10px 0;
   padding: 10px;
   min-height: 110px;
