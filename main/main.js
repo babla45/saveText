@@ -19,7 +19,7 @@ const auth = getAuth();
 
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    window.location.href = "index.html";
+    window.location.href = "/index.html";
   } else {
     displayText();
     displayUserInfo(user);
@@ -135,7 +135,7 @@ window.displayUserInfo = function(user) {
 window.signOutUser = function() {
   signOut(auth).then(() => {
     alert("Signed out successfully!");
-    window.location.href = "index.html";
+    window.location.href = "/index.html";
   }).catch((error) => {
     console.error("Error signing out:", error);
   });

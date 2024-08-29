@@ -1,25 +1,23 @@
-<!-- index.html -->
+<!-- signup.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In</title>
+  <title>Sign Up</title>
   <!-- Include Firebase SDKs -->
-  <script type="module" src="script.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <script type="module" src="signup.js"> </script>
+  <link rel="stylesheet" href="signup.css">
 </head>
 
 <body>
-
-  <h2>Login to your account</h2>
   <div class="container">
+    <h1>Sign Up </h1>
     <input type="email" id="emailInput" placeholder="Enter your email">
     <input type="password" id="passwordInput" placeholder="Enter your password">
-    <button onclick="signIn()">Login</button>
+    <button onclick="signUp()">submit</button>
   </div>
-
-  <p>Don't have an account? <a href="/signup/signup.html">Create Account</a></p>
+  <p>Already have an account? <a href="/index.html">Sign In</a></p>
 
 
 </body>
