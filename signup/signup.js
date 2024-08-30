@@ -22,7 +22,7 @@ window.signUp = function() {
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
       alert("Sign up successful! Please sign in.");
-      window.location.href = "index.html"; // Redirect to sign-in page
+      window.location.href = "../index.html"; // Redirect to sign-in page
     })
     .catch((error) => {
       const errorMessage = error.message;
