@@ -18,7 +18,6 @@ const auth = getAuth();
 window.signUp = function() {
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
-
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
       alert("Sign up successful! Please sign in.");
@@ -29,4 +28,11 @@ window.signUp = function() {
       console.error("Error signing up:", errorMessage);
       alert(`Error signing up: ${errorMessage}`);
     });
+
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwSOPhr-YR5vGCklQKnGMC7-7JWseM3S6Jy2HEoqq4rLrBAvBX0A2yWmCSrTF5JxDK1/exec'
+    const form = document.forms['sheet']
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+    })
 };
