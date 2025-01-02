@@ -41,7 +41,6 @@ button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  text-align: center;
   margin: 20px 0;
   padding: 10px;
   min-height: 110px;
