@@ -1,24 +1,26 @@
 /* Common Styles */
-body{
-  font-family: Arial, sans-serif;
-  text-align: center;
+body {
+  font-family: 'Cascadia Code', sans-serif;
+  text-align: center; 
   margin: 25px;
   background-color: rgb(231, 225, 225);
-  /* background-color: rgb(245, 242, 242); */
+  font-weight: bold;
+  background-color: rgb(245, 242, 242);
 }
-  
-textarea{
+
+textarea {
   width: 90%;
   min-height: 150px;
-  padding: 10px;
+  padding: 15px 10px 15px 15px;
   margin: 10px;
   border: none;
   box-shadow: inset 1px 1px 2px 2px rgb(154, 21, 70),
   2px 2px 5px green;
   border-radius: 20px;
   resize: vertical; /* Allow vertical resizing only */
+  text-align: left; /* Align text inside the text area to the left */
 }
-  
+
 .btn {
   padding: 8px 20px;
   border: none;
@@ -30,12 +32,12 @@ textarea{
   box-shadow: inset 1px 1px 2px 2px rgb(154, 21, 70),
   2px 2px 5px green;
 }
-  
+
 button:hover {
   background-color: #c20d16;
   font-size: 15px;
 }
-  
+
 /* Main App Styles */
 .text-entry {
   display: flex;
@@ -52,8 +54,9 @@ button:hover {
   /* font-weight: bold; */
   box-shadow:  -1px -1px 4px rgb(14, 169, 146),
                 1px 1px 4px rgb(236, 67, 10);
+  text-align: left; /* Align text inside the text-entry to the left */
 }
-  
+
 .text-entry span {
   flex: 1;
   word-wrap: break-word;
@@ -61,7 +64,7 @@ button:hover {
   text-overflow: ellipsis;
   white-space: pre-wrap;
 }
-  
+
 .icon-container {
   display: flex;
   flex-direction: column;
@@ -70,7 +73,7 @@ button:hover {
   top: 50%;
   transform: translateY(-50%);
 }
-  
+
 .copy-button, .delete-button, .edit-button {
   cursor: pointer;
   border: none;
@@ -78,4 +81,31 @@ button:hover {
   font-size: 16px;
   margin: 2px 0;
 }
-  
+
+.flash-message {
+  display: none;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeInOut 3s forwards;
+}
+
+.flash-message.success {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+.flash-message.error {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+

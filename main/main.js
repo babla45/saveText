@@ -26,6 +26,26 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+function showFlashMessage(message, isError = false) {
+  const flashMessageDiv = document.getElementById('flashMessage');
+  flashMessageDiv.textContent = message;
+  flashMessageDiv.className = isError ? 'flash-message error' : 'flash-message success';
+  flashMessageDiv.style.display = 'block';
+  setTimeout(() => {
+    flashMessageDiv.style.display = 'none';
+  }, 3000); // Duration set to 3 seconds
+}
+
+function displayFlashMessageFromSession() {
+  const message = sessionStorage.getItem('flashMessage');
+  const messageType = sessionStorage.getItem('flashMessageType');
+  if (message) {
+    showFlashMessage(message, messageType === 'error');
+    sessionStorage.removeItem('flashMessage');
+    sessionStorage.removeItem('flashMessageType');
+  }
+}
+
 window.saveText = function() {
   const userText = document.getElementById('userInput').value;
   const textKey = document.getElementById('userInput').dataset.key; // Get the key if editing
@@ -43,8 +63,12 @@ window.saveText = function() {
           document.getElementById('userInput').value = '';
           document.getElementById('userInput').dataset.key = ''; // Clear the key after editing
           displayText();
+          showFlashMessage('Text updated successfully!');
         })
-        .catch(error => console.error('Error updating the text:', error));
+        .catch(error => {
+          console.error('Error updating the text:', error);
+          showFlashMessage('Error updating the text.', true);
+        });
     } else {
       // If it's a new entry, push it to the database
       push(textsRef, { content: userText })
@@ -52,11 +76,15 @@ window.saveText = function() {
           console.log('Text saved!');
           document.getElementById('userInput').value = ''; // Clear input after saving
           displayText(); // Display user-specific text
+          showFlashMessage('Text saved successfully!');
         })
-        .catch(error => console.error('Error writing to database:', error));
+        .catch(error => {
+          console.error('Error writing to database:', error);
+          showFlashMessage('Error saving the text.', true);
+        });
     }
   } else {
-    alert("User not authenticated.");
+    showFlashMessage("User not authenticated.", true);
   }
 };
 
@@ -93,8 +121,11 @@ window.displayText = function() {
         copyButton.className = 'copy-button';
         copyButton.onclick = function() {
           navigator.clipboard.writeText(data.content)
-            .then(() => alert("Text copied!"))
-            .catch(err => console.error("Error copying text:", err));
+            .then(() => showFlashMessage("Text copied!"))
+            .catch(err => {
+              console.error("Error copying text:", err);
+              showFlashMessage("Error copying text.", true);
+            });
         };
 
         const deleteButton = document.createElement('button');
@@ -102,8 +133,14 @@ window.displayText = function() {
         deleteButton.className = 'delete-button';
         deleteButton.onclick = function() {
           remove(ref(database, `texts/${userUid}/${textKey}`))
-            .then(() => console.log("Text deleted!"))
-            .catch(error => console.error("Error deleting text:", error));
+            .then(() => {
+              console.log("Text deleted!");
+              showFlashMessage("Text deleted successfully!");
+            })
+            .catch(error => {
+              console.error("Error deleting text:", error);
+              showFlashMessage("Error deleting text.", true);
+            });
         };
 
         const editButton = document.createElement('button');
@@ -124,7 +161,7 @@ window.displayText = function() {
       });
     });
   } else {
-    alert("User not authenticated.");
+    showFlashMessage("User not authenticated.", true);
   }
 };
 
@@ -134,9 +171,18 @@ window.displayUserInfo = function(user) {
 
 window.signOutUser = function() {
   signOut(auth).then(() => {
-    alert("Signed out successfully!");
-    window.location.href = "../index.html";
+    redirectToPageWithMessage("../index.html", "Signed out successfully!");
   }).catch((error) => {
     console.error("Error signing out:", error);
+    showFlashMessage("Error signing out.", true);
   });
 };
+
+function redirectToPageWithMessage(url, message, isError = false) {
+  sessionStorage.setItem('flashMessage', message);
+  sessionStorage.setItem('flashMessageType', isError ? 'error' : 'success');
+  window.location.href = url;
+}
+
+// Call this function on page load to display any flash messages
+displayFlashMessageFromSession();

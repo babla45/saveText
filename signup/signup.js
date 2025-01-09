@@ -15,24 +15,34 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
+function showFlashMessage(message, isError = false) {
+  const flashMessageDiv = document.getElementById('flashMessage');
+  flashMessageDiv.textContent = message;
+  flashMessageDiv.className = isError ? 'flash-message error' : 'flash-message success';
+  flashMessageDiv.style.display = 'block';
+  setTimeout(() => {
+    flashMessageDiv.style.display = 'none';
+  }, 3000);
+}
+
 window.signUp = function() {
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
   createUserWithEmailAndPassword(auth, email, password)
     .then(() => {
-      alert("Sign up successful! Please sign in.");
+      showFlashMessage("Sign up successful! Please sign in.");
       window.location.href = "../index.html"; // Redirect to sign-in page
     })
     .catch((error) => {
       const errorMessage = error.message;
       console.error("Error signing up:", errorMessage);
-      alert(`Error signing up: ${errorMessage}`);
+      showFlashMessage(`Error signing up: ${errorMessage}`, true);
     });
 
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwSOPhr-YR5vGCklQKnGMC7-7JWseM3S6Jy2HEoqq4rLrBAvBX0A2yWmCSrTF5JxDK1/exec'
-    const form = document.forms['sheet']
-    form.addEventListener('submit', e => {
-      e.preventDefault()
-      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-    })
+  const scriptURL = 'https://script.google.com/macros/s/AKfycbwSOPhr-YR5vGCklQKnGMC7-7JWseM3S6Jy2HEoqq4rLrBAvBX0A2yWmCSrTF5JxDK1/exec'
+  const form = document.forms['sheet']
+  form.addEventListener('submit', e => {
+    e.preventDefault()
+    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+  })
 };
