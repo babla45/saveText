@@ -5,12 +5,12 @@ body {
   align-items: center;
   font-weight: bold;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgb(255, 255, 255);
   height: 100vh;
 }
 
 #emailInput, #passwordInput {
-  box-shadow: 2px 2px 4px rgb(244, 7, 165);
+  box-shadow: 2px 2px 9px -0.5px rgba(10, 29, 136, 0.705);
   border: none;
   border-radius: 13px;
   padding: 10px;
