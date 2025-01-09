@@ -10,7 +10,7 @@ body {
 }
 
 #emailInput, #passwordInput {
-  box-shadow: 2px 2px 4px rgb(244, 7, 165);
+  box-shadow: 2px 2px 9px -0.5px rgba(90, 65, 42, 0.555);
   border: none;
   border-radius: 13px;
   padding: 10px;
