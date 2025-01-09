@@ -51,7 +51,6 @@ button:hover {
   background-color: #fefefe;
   position: relative;
   overflow: hidden;
-  /* font-weight: bold; */
   box-shadow:  -1px -1px 4px rgb(14, 169, 146),
                 1px 1px 4px rgb(236, 67, 10);
   text-align: left; /* Align text inside the text-entry to the left */
@@ -74,12 +73,28 @@ button:hover {
   transform: translateY(-50%);
 }
 
-.copy-button, .delete-button, .edit-button {
+.copy-button, .delete-button, .edit-button, .view-more-button {
   cursor: pointer;
   border: none;
   background: none;
   font-size: 16px;
   margin: 2px 0;
+}
+
+.view-more-button{
+  border-radius: 12px;
+  padding: 1.5px 7px;
+  position: absolute;
+  bottom: 3px;
+  left: 38px;
+  font-weight: bold;
+  color: rgb(21, 6, 163);
+  background-color: #d4b4b4;
+}
+.view-more-button:hover{
+  /* font-size: 20px; */
+  color: white;
+  background-color: #000000;
 }
 
 .flash-message {
@@ -107,5 +122,18 @@ button:hover {
   10% { opacity: 1; }
   90% { opacity: 1; }
   100% { opacity: 0; }
+}
+
+/* Welcome Message Styles */
+#welcomeMessage {
+  font-size: 1.5em;
+  color: #fff;
+  background-color: #4CAF50; /* Green */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
 }
 

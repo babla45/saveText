@@ -40,7 +40,7 @@ window.signIn = function() {
   const password = document.getElementById('passwordInput').value;
 
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(() => {
       redirectToPageWithMessage("main/main.html", "Logged in successfully!");
     })
     .catch((error) => {
@@ -56,7 +56,7 @@ window.viewAsGuest = function() {
   const password = "123456"; // Use a predefined password for the public account
 
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(() => {
       redirectToPageWithMessage("main/main.html", "Logged in as guest!");
     })
     .catch((error) => {

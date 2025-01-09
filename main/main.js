@@ -56,30 +56,24 @@ window.saveText = function() {
     const textsRef = ref(database, `texts/${userUid}`);
 
     if (textKey) {
-      // If we are editing an existing entry, update it
       update(ref(database, `texts/${userUid}/${textKey}`), { content: userText })
         .then(() => {
-          console.log('Text updated!');
           document.getElementById('userInput').value = '';
           document.getElementById('userInput').dataset.key = ''; // Clear the key after editing
           displayText();
           showFlashMessage('Text updated successfully!');
         })
         .catch(error => {
-          console.error('Error updating the text:', error);
           showFlashMessage('Error updating the text.', true);
         });
     } else {
-      // If it's a new entry, push it to the database
       push(textsRef, { content: userText })
         .then(() => {
-          console.log('Text saved!');
           document.getElementById('userInput').value = ''; // Clear input after saving
           displayText(); // Display user-specific text
           showFlashMessage('Text saved successfully!');
         })
         .catch(error => {
-          console.error('Error writing to database:', error);
           showFlashMessage('Error saving the text.', true);
         });
     }
@@ -103,7 +97,6 @@ window.displayText = function() {
         textsArray.push({ key: childSnapshot.key, ...childSnapshot.val() });
       });
 
-      // Reverse the order to show latest entry at the top
       textsArray.reverse().forEach((data) => {
         const textKey = data.key;
 
@@ -111,7 +104,24 @@ window.displayText = function() {
         childDiv.className = 'text-entry';
 
         const textSpan = document.createElement('span');
-        textSpan.textContent = data.content;
+        const lines = data.content.split('\n');
+        const previewText = lines.slice(0, 10).join('\n');
+        const isTruncated = lines.length > 10;
+        textSpan.textContent = isTruncated ? `${previewText}\n...` : data.content;
+
+        const viewMoreButton = document.createElement('button');
+        viewMoreButton.textContent = 'Show more';
+        viewMoreButton.className = 'view-more-button';
+        viewMoreButton.style.display = isTruncated ? 'inline' : 'none';
+        viewMoreButton.onclick = function() {
+          if (viewMoreButton.textContent === 'Show more') {
+            textSpan.textContent = data.content;
+            viewMoreButton.textContent = 'Show less';
+          } else {
+            textSpan.textContent = `${previewText}\n...`;
+            viewMoreButton.textContent = 'Show more';
+          }
+        };
 
         const iconContainer = document.createElement('div');
         iconContainer.className = 'icon-container';
@@ -122,8 +132,7 @@ window.displayText = function() {
         copyButton.onclick = function() {
           navigator.clipboard.writeText(data.content)
             .then(() => showFlashMessage("Text copied!"))
-            .catch(err => {
-              console.error("Error copying text:", err);
+            .catch(() => {
               showFlashMessage("Error copying text.", true);
             });
         };
@@ -134,11 +143,9 @@ window.displayText = function() {
         deleteButton.onclick = function() {
           remove(ref(database, `texts/${userUid}/${textKey}`))
             .then(() => {
-              console.log("Text deleted!");
               showFlashMessage("Text deleted successfully!");
             })
-            .catch(error => {
-              console.error("Error deleting text:", error);
+            .catch(() => {
               showFlashMessage("Error deleting text.", true);
             });
         };
@@ -156,6 +163,7 @@ window.displayText = function() {
         iconContainer.appendChild(editButton);
 
         childDiv.appendChild(textSpan);
+        childDiv.appendChild(viewMoreButton);
         childDiv.appendChild(iconContainer);
         displayDiv.appendChild(childDiv);
       });
@@ -173,7 +181,6 @@ window.signOutUser = function() {
   signOut(auth).then(() => {
     redirectToPageWithMessage("../index.html", "Signed out successfully!");
   }).catch((error) => {
-    console.error("Error signing out:", error);
     showFlashMessage("Error signing out.", true);
   });
 };
@@ -184,5 +191,4 @@ function redirectToPageWithMessage(url, message, isError = false) {
   window.location.href = url;
 }
 
-// Call this function on page load to display any flash messages
 displayFlashMessageFromSession();

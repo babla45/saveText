@@ -11,23 +11,17 @@
 
   <div id="flashMessage" class="flash-message"></div>
 
-  <h3 id="userEmail">Loading...</h3>
+  <h3 id="userEmail" class="welcome-message">Loading...</h3>
 
-  <!-- ---text area-- -->
   <textarea id="userInput" placeholder="Enter text here"></textarea>
   <br><br><br>
 
-
-  <!-- sign out button -->
   <button class="btn" onclick="signOutUser()">Log Out</button>
-  <!-- ---save text button-- -->
   <button class="btn" onclick="saveText()">Save Text</button>
-  <!-- ----clear button --- -->
   <button class="btn" onclick="document.getElementById('userInput').value = '';">Clear</button>
   <br><br><br>
-  <!-- display div  -->
+
   <div id="displayText"></div>
-  
 
 </body>
 </html>
