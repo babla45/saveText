@@ -1,0 +1,100 @@
+body {
+  font-family: 'Cascadia Code', sans-serif;
+  text-align: center; 
+  margin: 25px;
+  background-color: rgb(245, 242, 242);
+  font-weight: bold;
+  color: #333; /* Darker text color for better contrast */
+}
+
+.saved-note {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', monospace;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid #3b82f6; /* Blue border for saved notes */
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s ease-in-out; /* Smooth transition for hover effect */
+}
+
+.saved-note:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover for interactivity */
+}
+
+.note-timestamp {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.note-content {
+  line-height: 1.5;
+}
+
+.text-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 10px;
+  min-height: 110px;
+  border-radius: 12px;
+  background-color: #ffffff; /* White background for better contrast */
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.text-entry:hover {
+  transform: scale(1.02);
+}
+
+.text-entry span {
+  flex: 1;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  font-size: 1rem; /* Increase font size for readability */
+  color: #333; /* Ensure text color is dark enough for contrast */
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.copy-button, .delete-button, .edit-button, .view-more-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 16px;
+  margin: 2px 0;
+}
+
+.view-more-button {
+  border-radius: 7px;
+  padding: 1.5px 7px;
+  position: absolute;
+  bottom: 4px;
+  left: 38px;
+  font-weight: bold;
+  color: rgb(231, 231, 231);
+  background-color: #0a0e33;
+  box-shadow: 0px 0px 3px -0.5px rgba(30, 5, 87, 0.973);
+}
+
+.view-more-button:hover {
+  color: white;
+  background-color: #0e0349;
+} 

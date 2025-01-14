@@ -4,24 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Save Important Text</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="main.css">
   <script type="module" src="main.js"></script>
-</head>
-<body>
 
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen flex flex-col">
+  <!-- Flash Message -->
   <div id="flashMessage" class="flash-message"></div>
 
-  <h3 id="userEmail" class="welcome-message">Loading...</h3>
+  <!-- Navigation Bar -->
+  <nav class="bg-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-bold text-gray-800">Note Keeper</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span id="userEmail" class="text-gray-600">Loading...</span>
+          <button 
+            onclick="signOutUser()" 
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
 
-  <textarea id="userInput" placeholder="Enter text here"></textarea>
-  <br><br><br>
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <div class="w-[95vw] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="bg-white rounded-lg shadow-xl p-6">
+        <!-- Text Input Area -->
+        <div class="mb-6">
+          <textarea 
+            id="userInput" 
+            placeholder="Enter your notes here..." 
+            class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono shadow-sm"
+            spellcheck="false"
+          ></textarea>
+        </div>
 
-  <button class="btn" onclick="signOutUser()">Log Out</button>
-  <button class="btn" onclick="saveText()">Save Text</button>
-  <button class="btn" onclick="document.getElementById('userInput').value = '';">Clear</button>
-  <br><br><br>
+        <!-- Action Buttons -->
+        <div class="flex space-x-4">
+          <button 
+            onclick="saveText()" 
+            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            Save Text
+          </button>
+          
+          <button 
+            onclick="document.getElementById('userInput').value = '';" 
+            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Clear
+          </button>
+        </div>
+      </div>
 
-  <div id="displayText"></div>
+      <!-- Saved Notes Display -->
+      <div class="mt-8 bg-white rounded-lg shadow-xl p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Saved Notes</h2>
+        <div id="displayText" class="space-y-4">
+          <!-- Saved notes will be displayed here with preserved formatting -->
+        </div>
+      </div>
+    </div>
+  </main>
 
+  <!-- Footer -->
+  <footer class="bg-white mt-12">
+    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+      <p class="text-center text-gray-500 text-sm">
+        © 2024 Note Keeper. All rights reserved.
+      </p>
+    </div>
+  </footer>
 </body>
 </html>
