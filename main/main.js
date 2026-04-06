@@ -437,7 +437,7 @@ window.displayText = function() {
 };
 
 window.displayUserInfo = function(user) {
-  document.getElementById('userEmail').innerHTML = `Hi ${user.email}!<br>Welcome to the main App`;
+  document.getElementById('userEmail').innerHTML = `User: ${user.email}`;
 };
 
 window.signOutUser = function() {
