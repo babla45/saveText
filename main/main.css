@@ -41,19 +41,23 @@ button:hover {
 /* Main App Styles */
 .text-entry {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 20px 0;
-  padding: 10px;
-  padding-right: 40px; /* Add extra padding so text doesn't hide under icons */
+  flex-direction: column;
+  margin: 16px 0;
+  padding: 16px;
   min-height: 110px;
-  border: none;
+  border: 1px solid #e5e7eb; /* Tailwind gray-200 to separate notes clearly */
   border-radius: 12px;
-  background-color: #fefefe;
-  box-shadow: 0px 0px 5px -0.5px rgba(39, 5, 119, 0.973);
+  background-color: #ffffff;
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.05), 0px 2px 4px -1px rgba(0, 0, 0, 0.03); /* Softer, broader shadow */
   position: relative;
   overflow: hidden;
-  text-align: left; /* Align text inside the text-entry to the left */
+  text-align: left;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.text-entry:hover {
+  border-color: #d1d5db; /* Tailwind gray-300 */
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.05), 0px 4px 6px -2px rgba(0, 0, 0, 0.025);
 }
 
 .text-entry span {
@@ -62,40 +66,59 @@ button:hover {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: pre-wrap;
+  width: 100%;
 }
 
-.icon-container {
+.actions-container {
   display: flex;
-  flex-direction: column;
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  transform: translateY(-50%);
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
 }
 
-.copy-button, .delete-button, .edit-button, .view-more-button {
+.action-text-btn {
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.action-text-btn:hover {
+  background-color: #eff6ff; /* Tailwind blue-50 */
+  color: #2563eb;
+  border-color: #bfdbfe; /* Tailwind blue-200 */
+}
+
+.action-text-btn.delete-text-btn:hover {
+  background-color: #fef2f2; /* Tailwind red-50 */
+  color: #dc2626;
+  border-color: #fecaca; /* Tailwind red-200 */
+}
+
+.view-more-button {
   cursor: pointer;
   border: none;
-  background: none;
-  font-size: 16px;
-  margin: 2px 0;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 12px;
+  margin: 12px 0 0 0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  align-self: flex-start;
+  font-weight: 500;
+  transition: all 0.15s ease;
 }
 
-.view-more-button{
-  border-radius: 7px;
-  padding: 1.5px 7px;
-  position: absolute;
-  bottom: 4px;
-  left: 38px;
-  font-weight: bold;
-  color: rgb(231, 231, 231);
-  background-color: #0a0e33;
-  box-shadow: 0px 0px 3px -0.5px rgba(30, 5, 87, 0.973);
-}
-.view-more-button:hover{
-  /* font-size: 20px; */
-  color: white;
-  background-color: #0e0349;
+.view-more-button:hover {
+  background: #e5e7eb;
+  color: #1f2937;
 }
 
 .loading-indicator {

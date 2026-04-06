@@ -221,12 +221,12 @@ window.renderTexts = function() {
       window.updateSearchNavigation(true);
     };
 
-    const iconContainer = document.createElement('div');
-    iconContainer.className = 'icon-container';
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'actions-container';
 
     const copyButton = document.createElement('button');
-    copyButton.innerHTML = '📋';
-    copyButton.className = 'copy-button';
+    copyButton.textContent = 'Copy';
+    copyButton.className = 'action-text-btn';
     copyButton.onclick = function() {
       navigator.clipboard.writeText(data.content)
         .then(() => showFlashMessage("Text copied!"))
@@ -235,9 +235,23 @@ window.renderTexts = function() {
         });
     };
 
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.className = 'action-text-btn';
+    editButton.onclick = function() {
+      const userInputEl = document.getElementById('userInput');
+      userInputEl.value = data.content;
+      userInputEl.dataset.key = textKey; // Store the key in the input field for editing
+      
+      // Scroll to the input and focus it
+      const y = userInputEl.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({top: y, behavior: 'smooth'});
+      userInputEl.focus({ preventScroll: true });
+    };
+
     const deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '🗑️';
-    deleteButton.className = 'delete-button';
+    deleteButton.textContent = 'Delete';
+    deleteButton.className = 'action-text-btn delete-text-btn';
     deleteButton.onclick = function() {
       if (confirm("Are you sure you want to delete this text?")) {
         remove(ref(database, `texts/${userUid}/${textKey}`))
@@ -250,27 +264,15 @@ window.renderTexts = function() {
       }
     };
 
-    const editButton = document.createElement('button');
-    editButton.innerHTML = '✏️'; // Unicode for pencil icon
-    editButton.className = 'edit-button';
-    editButton.onclick = function() {
-      const userInputEl = document.getElementById('userInput');
-      userInputEl.value = data.content;
-      userInputEl.dataset.key = textKey; // Store the key in the input field for editing
-      
-      // Scroll to the input and focus it
-      const y = userInputEl.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({top: y, behavior: 'smooth'});
-      userInputEl.focus({ preventScroll: true });
-    };
-
-    iconContainer.appendChild(copyButton);
-    iconContainer.appendChild(deleteButton);
-    iconContainer.appendChild(editButton);
+    actionsContainer.appendChild(copyButton);
+    actionsContainer.appendChild(editButton);
+    actionsContainer.appendChild(deleteButton);
 
     childDiv.appendChild(textSpan);
-    childDiv.appendChild(viewMoreButton);
-    childDiv.appendChild(iconContainer);
+    if (isTruncated) {
+      childDiv.appendChild(viewMoreButton);
+    }
+    childDiv.appendChild(actionsContainer);
 
     rowWrapper.appendChild(indexNumber);
     rowWrapper.appendChild(childDiv);
@@ -456,7 +458,7 @@ window.displayUserInfo = function(user) {
 
 window.signOutUser = function() {
   signOut(auth).then(() => {
-    redirectToPageWithMessage("../index.html", "Signed out successfully!");
+    window.location.href = "../index.html";
   }).catch((error) => {
     showFlashMessage("Error signing out.", true);
   });
