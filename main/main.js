@@ -182,11 +182,19 @@ window.renderTexts = function() {
     return;
   }
 
-  window.filteredTextsArray.forEach((data) => {
+  window.filteredTextsArray.forEach((data, index) => {
     const textKey = data.key;
 
+    const rowWrapper = document.createElement('div');
+    rowWrapper.className = 'flex items-center';
+
+    const indexNumber = document.createElement('div');
+    indexNumber.className = 'text-gray-400 font-bold text-lg w-8 flex-shrink-0 text-right mr-4';
+    indexNumber.textContent = `${index + 1}.`;
+
     const childDiv = document.createElement('div');
-    childDiv.className = 'text-entry';
+    childDiv.className = 'text-entry flex-grow';
+    childDiv.style.margin = '0'; // Override existing margin to fit nicely in flex row
 
     const textSpan = document.createElement('span');
     const lines = data.content.split('\n');
@@ -209,6 +217,7 @@ window.renderTexts = function() {
         textSpan.innerHTML = highlightText(previewRaw, query, searchType) + '<br>...';
         viewMoreButton.textContent = 'Show more';
       }
+      window.updateSearchNavigation(true);
     };
 
     const iconContainer = document.createElement('div');
@@ -255,36 +264,151 @@ window.renderTexts = function() {
     childDiv.appendChild(textSpan);
     childDiv.appendChild(viewMoreButton);
     childDiv.appendChild(iconContainer);
-    displayDiv.appendChild(childDiv);
+
+    rowWrapper.appendChild(indexNumber);
+    rowWrapper.appendChild(childDiv);
+    displayDiv.appendChild(rowWrapper);
   });
+  
+  // Update search navigation arrows and count
+  window.updateSearchNavigation(false);
+};
+
+// Search Result Navigation state
+window.currentSearchIndex = -1;
+window.searchResults = [];
+
+window.updateSearchNavigation = function(preserveIndex = false) {
+  window.searchResults = Array.from(document.querySelectorAll('mark'));
+  const searchControls = document.getElementById('searchNavControls');
+  const searchInput = document.getElementById('searchInput').value.trim();
+  
+  if (searchControls) {
+    if (window.searchResults.length > 0 && searchInput !== '') {
+      searchControls.classList.remove('hidden');
+      if (!preserveIndex || window.currentSearchIndex >= window.searchResults.length || window.currentSearchIndex < 0) {
+        window.currentSearchIndex = 0;
+      }
+      window.highlightCurrentResult(false); // Don't scroll while typing/searching
+    } else {
+      searchControls.classList.add('hidden');
+      window.currentSearchIndex = -1;
+      const countEl = document.getElementById('searchNavCount');
+      if (countEl) countEl.textContent = '0/0';
+    }
+  }
+};
+
+window.highlightCurrentResult = function(scroll = true) {
+  window.searchResults.forEach((el, index) => {
+    if (index === window.currentSearchIndex) {
+      el.style.backgroundColor = '#ff9800'; // Orange to indicate active
+      el.style.color = '#fff';
+      
+      // Smooth scroll into view, accounting for sticking nav height (~64px)
+      if (scroll) {
+        const y = el.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({top: y, behavior: 'smooth'});
+      }
+    } else {
+      el.style.backgroundColor = 'yellow';
+      el.style.color = '';
+    }
+  });
+
+  const countEl = document.getElementById('searchNavCount');
+  if (countEl) {
+    countEl.textContent = `${window.currentSearchIndex + 1}/${window.searchResults.length}`;
+  }
+};
+
+window.nextSearchResult = function() {
+  if (window.searchResults.length === 0) return;
+  window.currentSearchIndex = (window.currentSearchIndex + 1) % window.searchResults.length;
+  window.highlightCurrentResult(true);
+};
+
+window.prevSearchResult = function() {
+  if (window.searchResults.length === 0) return;
+  window.currentSearchIndex = (window.currentSearchIndex - 1 + window.searchResults.length) % window.searchResults.length;
+  window.highlightCurrentResult(true);
 };
 
 // Search handling function
 window.handleSearch = function() {
-  const query = document.getElementById('searchInput').value.trim();
+  const searchInput = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('clearSearchBtn');
+  const query = searchInput.value;
   const searchType = document.getElementById('searchType').value;
   
-  if (query === '') {
+  // Show/hide clear button
+  if (query.length > 0) {
+    clearBtn.classList.remove('hidden');
+  } else {
+    clearBtn.classList.add('hidden');
+  }
+
+  const queryTrimmed = query.trim();
+  
+  if (queryTrimmed === '') {
     window.filteredTextsArray = [...window.allTextsArray];
   } else {
     window.filteredTextsArray = window.allTextsArray.filter(data => {
       const text = data.content;
       if (searchType === 'substring') {
-        return text.toLowerCase().includes(query.toLowerCase());
+        return text.toLowerCase().includes(queryTrimmed.toLowerCase());
       } else if (searchType === 'regex') {
         try {
-          const regex = new RegExp(query, 'i');
+          const regex = new RegExp(queryTrimmed, 'i');
           return regex.test(text);
         } catch(e) {
           return false;
         }
       } else {
-        return isSubsequence(query, text);
+        return isSubsequence(queryTrimmed, text);
       }
     });
   }
   window.renderTexts();
 };
+
+window.clearSearch = function() {
+  const searchInput = document.getElementById('searchInput');
+  searchInput.value = '';
+  window.handleSearch();
+};
+
+window.toggleSettingsMenu = function() {
+  const dropdown = document.getElementById('settingsDropdown');
+  dropdown.classList.toggle('hidden');
+};
+
+window.expandAllNotes = function() {
+  document.querySelectorAll('.view-more-button').forEach(btn => {
+    if (btn.style.display !== 'none' && btn.textContent === 'Show more') {
+      btn.click();
+    }
+  });
+  document.getElementById('settingsDropdown').classList.add('hidden');
+};
+
+window.collapseAllNotes = function() {
+  document.querySelectorAll('.view-more-button').forEach(btn => {
+    if (btn.style.display !== 'none' && btn.textContent === 'Show less') {
+      btn.click();
+    }
+  });
+  document.getElementById('settingsDropdown').classList.add('hidden');
+};
+
+// Close dropdown if clicked outside
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('settingsDropdown');
+  const button = document.getElementById('settingsMenuButton');
+  if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+    dropdown.classList.add('hidden');
+  }
+});
 
 window.displayText = function() {
   const user = getAuth().currentUser;
