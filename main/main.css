@@ -97,13 +97,25 @@ button:hover {
   background-color: #0e0349;
 }
 
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #666;
+}
+
 .flash-message {
   display: none;
-  padding: 10px;
-  margin: 10px 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  padding: 15px 25px;
   border-radius: 5px;
   text-align: center;
   font-weight: bold;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   animation: fadeInOut 3s forwards;
 }
 

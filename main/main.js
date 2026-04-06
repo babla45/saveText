@@ -90,6 +90,8 @@ window.displayText = function() {
     const displayDiv = document.getElementById('displayText');
     const textsRef = ref(database, `texts/${userUid}`);
     
+    displayDiv.innerHTML = '<div class="loading-indicator">Loading notes...</div>';
+
     onValue(textsRef, (snapshot) => {
       displayDiv.innerHTML = ''; // Clear the display area first
       const textsArray = [];
@@ -141,13 +143,15 @@ window.displayText = function() {
         deleteButton.innerHTML = '🗑️';
         deleteButton.className = 'delete-button';
         deleteButton.onclick = function() {
-          remove(ref(database, `texts/${userUid}/${textKey}`))
-            .then(() => {
-              showFlashMessage("Text deleted successfully!");
-            })
-            .catch(() => {
-              showFlashMessage("Error deleting text.", true);
-            });
+          if (confirm("Are you sure you want to delete this text?")) {
+            remove(ref(database, `texts/${userUid}/${textKey}`))
+              .then(() => {
+                showFlashMessage("Text deleted successfully!");
+              })
+              .catch(() => {
+                showFlashMessage("Error deleting text.", true);
+              });
+          }
         };
 
         const editButton = document.createElement('button');
