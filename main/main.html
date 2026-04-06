@@ -18,7 +18,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center">
-          <h1 class="text-xl font-bold text-gray-800">Note Keeper</h1>
+          <h1 class="text-xl font-bold text-gray-800 mr-8">Note Keeper</h1>
+          
+          <!-- Search Area -->
+          <div class="flex items-center space-x-2">
+            <input type="text" id="searchInput" placeholder="Search notes..." oninput="handleSearch()" class="px-3 py-1 border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-sm">
+            <select id="searchType" onchange="handleSearch()" class="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+              <option value="substring">Substring</option>
+              <option value="subsequence">Subsequence</option>
+              <option value="regex">Regex</option>
+            </select>
+          </div>
         </div>
         <div class="flex items-center space-x-4">
           <span id="userEmail" class="text-gray-600">Loading...</span>
@@ -76,7 +86,9 @@
 
       <!-- Saved Notes Display -->
       <div class="mt-8 bg-white rounded-lg shadow-xl p-6">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">Saved Notes</h2>
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+          Saved Notes <span id="searchResultsCount" class="text-sm font-normal text-gray-500 ml-2"></span>
+        </h2>
         <div id="displayText" class="space-y-4">
           <!-- Saved notes will be displayed here with preserved formatting -->
         </div>
