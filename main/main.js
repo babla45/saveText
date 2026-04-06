@@ -131,12 +131,13 @@ function highlightText(text, query, type) {
     }
   }
 
-  if (type === 'substring') {
+  if (type === 'substring' || type === 'fullword') {
     const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp(`(${escapedQuery})`, 'gi');
+    const regexPattern = type === 'fullword' ? `(\\b${escapedQuery}\\b)` : `(${escapedQuery})`;
+    const regex = new RegExp(regexPattern, 'gi');
     const parts = text.split(regex);
-    return parts.map(part => {
-      if (part.toLowerCase() === query.toLowerCase()) {
+    return parts.map((part, i) => {
+      if (i % 2 === 1 && part) {
         return `<mark style="background-color: yellow;">${escapeHTML(part).replace(/\n/g, '<br>')}</mark>`;
       }
       return escapeHTML(part).replace(/\n/g, '<br>');
@@ -366,6 +367,10 @@ window.handleSearch = function() {
       const text = data.content;
       if (searchType === 'substring') {
         return text.toLowerCase().includes(queryTrimmed.toLowerCase());
+      } else if (searchType === 'fullword') {
+        const escapedQuery = queryTrimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
+        return regex.test(text);
       } else if (searchType === 'regex') {
         try {
           const regex = new RegExp(queryTrimmed, 'i');
