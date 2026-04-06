@@ -45,6 +45,7 @@ button:hover {
   align-items: center;
   margin: 20px 0;
   padding: 10px;
+  padding-right: 40px; /* Add extra padding so text doesn't hide under icons */
   min-height: 110px;
   border: none;
   border-radius: 12px;

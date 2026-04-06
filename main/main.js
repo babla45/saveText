@@ -186,10 +186,10 @@ window.renderTexts = function() {
     const textKey = data.key;
 
     const rowWrapper = document.createElement('div');
-    rowWrapper.className = 'flex items-center';
+    rowWrapper.className = 'flex items-start sm:items-center mt-2 sm:mt-0';
 
     const indexNumber = document.createElement('div');
-    indexNumber.className = 'text-gray-400 font-bold text-lg w-8 flex-shrink-0 text-right mr-4';
+    indexNumber.className = 'text-gray-400 font-bold text-sm sm:text-lg w-6 sm:w-8 flex-shrink-0 text-right mr-2 sm:mr-4 mt-2 sm:mt-0';
     indexNumber.textContent = `${index + 1}.`;
 
     const childDiv = document.createElement('div');
@@ -253,8 +253,14 @@ window.renderTexts = function() {
     editButton.innerHTML = '✏️'; // Unicode for pencil icon
     editButton.className = 'edit-button';
     editButton.onclick = function() {
-      document.getElementById('userInput').value = data.content;
-      document.getElementById('userInput').dataset.key = textKey; // Store the key in the input field for editing
+      const userInputEl = document.getElementById('userInput');
+      userInputEl.value = data.content;
+      userInputEl.dataset.key = textKey; // Store the key in the input field for editing
+      
+      // Scroll to the input and focus it
+      const y = userInputEl.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({top: y, behavior: 'smooth'});
+      userInputEl.focus({ preventScroll: true });
     };
 
     iconContainer.appendChild(copyButton);
@@ -338,14 +344,17 @@ window.prevSearchResult = function() {
 window.handleSearch = function() {
   const searchInput = document.getElementById('searchInput');
   const clearBtn = document.getElementById('clearSearchBtn');
+  const searchTypeSelect = document.getElementById('searchType');
   const query = searchInput.value;
-  const searchType = document.getElementById('searchType').value;
+  const searchType = searchTypeSelect.value;
   
-  // Show/hide clear button
+  // Show/hide clear button and search type select
   if (query.length > 0) {
     clearBtn.classList.remove('hidden');
+    searchTypeSelect.classList.remove('hidden');
   } else {
     clearBtn.classList.add('hidden');
+    searchTypeSelect.classList.add('hidden');
   }
 
   const queryTrimmed = query.trim();
