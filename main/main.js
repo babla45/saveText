@@ -98,6 +98,31 @@ function isSubsequence(query, string) {
   return false;
 }
 
+function doesTextMatchQuery(text, query, searchType) {
+  if (!query) return true;
+
+  if (searchType === 'substring') {
+    return text.toLowerCase().includes(query.toLowerCase());
+  }
+
+  if (searchType === 'fullword') {
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
+    return regex.test(text);
+  }
+
+  if (searchType === 'regex') {
+    try {
+      const regex = new RegExp(query, 'i');
+      return regex.test(text);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  return isSubsequence(query, text);
+}
+
 function escapeHTML(str) {
   return str.replace(/[&<>'"]/g, 
     tag => ({
@@ -169,14 +194,34 @@ window.renderTexts = function() {
   const query = document.getElementById('searchInput').value.trim();
   const searchType = document.getElementById('searchType').value;
   const searchResultsCount = document.getElementById('searchResultsCount');
+  const userInput = document.getElementById('userInput');
+  const editorText = userInput ? userInput.value : '';
+  const editorHasMatch = query !== '' && editorText !== '' && doesTextMatchQuery(editorText, query, searchType);
 
   if (query !== '') {
-    searchResultsCount.textContent = `(${window.filteredTextsArray.length} results found)`;
+    const totalResults = window.filteredTextsArray.length + (editorHasMatch ? 1 : 0);
+    searchResultsCount.textContent = `(${totalResults} results found)`;
   } else {
     searchResultsCount.textContent = '';
   }
 
-  if (window.filteredTextsArray.length === 0) {
+  if (editorHasMatch) {
+    const editorWrapper = document.createElement('div');
+    editorWrapper.className = 'text-entry border-l-4 border-blue-500 bg-blue-50/50';
+
+    const editorTitle = document.createElement('div');
+    editorTitle.className = 'text-xs font-semibold text-blue-700 mb-2 uppercase tracking-wide';
+    editorTitle.textContent = 'Current Note (Editor)';
+
+    const editorContent = document.createElement('div');
+    editorContent.innerHTML = highlightText(editorText, query, searchType);
+
+    editorWrapper.appendChild(editorTitle);
+    editorWrapper.appendChild(editorContent);
+    displayDiv.appendChild(editorWrapper);
+  }
+
+  if (window.filteredTextsArray.length === 0 && !editorHasMatch) {
     if (query !== '') {
       displayDiv.innerHTML = '<div class="text-center text-gray-500 py-8 italic border-t border-gray-200">No matching notes found.</div>';
     }
@@ -367,22 +412,7 @@ window.handleSearch = function() {
   } else {
     window.filteredTextsArray = window.allTextsArray.filter(data => {
       const text = data.content;
-      if (searchType === 'substring') {
-        return text.toLowerCase().includes(queryTrimmed.toLowerCase());
-      } else if (searchType === 'fullword') {
-        const escapedQuery = queryTrimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const regex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
-        return regex.test(text);
-      } else if (searchType === 'regex') {
-        try {
-          const regex = new RegExp(queryTrimmed, 'i');
-          return regex.test(text);
-        } catch(e) {
-          return false;
-        }
-      } else {
-        return isSubsequence(queryTrimmed, text);
-      }
+      return doesTextMatchQuery(text, queryTrimmed, searchType);
     });
   }
   window.renderTexts();
