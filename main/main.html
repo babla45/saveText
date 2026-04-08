@@ -98,6 +98,22 @@
           ></textarea>
         </div>
 
+        <div id="replaceEditorGroup" class="mb-6 flex flex-col sm:flex-row gap-2 sm:items-center hidden">
+          <label for="replaceInput" class="text-sm text-gray-700 whitespace-nowrap">Replace Found In Editor:</label>
+          <input
+            type="text"
+            id="replaceInput"
+            placeholder="Replacement text"
+            class="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+          <button
+            onclick="replaceFoundInCurrentEditorNote()"
+            class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Replace Found
+          </button>
+        </div>
+
         <!-- Action Buttons -->
         <div class="flex space-x-4">
           <button 

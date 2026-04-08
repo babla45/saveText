@@ -393,6 +393,8 @@ window.handleSearch = function() {
   const searchInput = document.getElementById('searchInput');
   const clearBtn = document.getElementById('clearSearchBtn');
   const searchTypeSelect = document.getElementById('searchType');
+  const replaceEditorGroup = document.getElementById('replaceEditorGroup');
+  const userInput = document.getElementById('userInput');
   const query = searchInput.value;
   const searchType = searchTypeSelect.value;
   
@@ -406,6 +408,16 @@ window.handleSearch = function() {
   }
 
   const queryTrimmed = query.trim();
+  const editorText = userInput ? userInput.value : '';
+  const editorHasMatch = queryTrimmed !== '' && editorText !== '' && doesTextMatchQuery(editorText, queryTrimmed, searchType);
+
+  if (replaceEditorGroup) {
+    if (editorHasMatch) {
+      replaceEditorGroup.classList.remove('hidden');
+    } else {
+      replaceEditorGroup.classList.add('hidden');
+    }
+  }
   
   if (queryTrimmed === '') {
     window.filteredTextsArray = [...window.allTextsArray];
@@ -422,6 +434,70 @@ window.clearSearch = function() {
   const searchInput = document.getElementById('searchInput');
   searchInput.value = '';
   window.handleSearch();
+};
+
+window.replaceFoundInCurrentEditorNote = function() {
+  const searchInput = document.getElementById('searchInput');
+  const searchTypeSelect = document.getElementById('searchType');
+  const replaceInput = document.getElementById('replaceInput');
+  const userInput = document.getElementById('userInput');
+
+  const query = searchInput.value.trim();
+  const searchType = searchTypeSelect.value;
+  const replacement = replaceInput.value;
+  const currentText = userInput.value;
+
+  if (!query) {
+    showFlashMessage('Enter text in the top search box first.', true);
+    return;
+  }
+
+  if (searchType === 'subsequence') {
+    showFlashMessage('Replace is not supported for Subseq mode. Use Substr, Full Word, or Regex.', true);
+    return;
+  }
+
+  let regex;
+  try {
+    if (searchType === 'substring') {
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      regex = new RegExp(escapedQuery, 'gi');
+    } else if (searchType === 'fullword') {
+      const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      regex = new RegExp(`\\b${escapedQuery}\\b`, 'gi');
+    } else {
+      if (new RegExp(query).test('')) {
+        showFlashMessage('Regex matches empty text; replace is blocked to avoid unintended changes.', true);
+        return;
+      }
+      regex = new RegExp(query, 'gi');
+    }
+  } catch (e) {
+    showFlashMessage('Invalid regex pattern.', true);
+    return;
+  }
+
+  const matchRegex = new RegExp(regex.source, regex.flags);
+  const matches = Array.from(currentText.matchAll(matchRegex));
+  const replacedCount = matches.length;
+
+  if (replacedCount === 0) {
+    showFlashMessage('No matches found in current note.', true);
+    return;
+  }
+
+  let replacementValue = replacement;
+  if (searchType === 'regex') {
+    // Support $0 as full-match token (mapped to JS $&). Use \$0 for a literal "$0".
+    replacementValue = replacementValue
+      .replace(/\\\$0/g, '__LITERAL_DOLLAR_ZERO__')
+      .replace(/(^|[^\\])\$0(?!\d)/g, (full, prefix) => `${prefix}$&`)
+      .replace(/__LITERAL_DOLLAR_ZERO__/g, '$0');
+  }
+
+  userInput.value = currentText.replace(regex, replacementValue);
+  window.handleSearch();
+  showFlashMessage(`Replaced ${replacedCount} occurrence${replacedCount === 1 ? '' : 's'} in current note.`);
 };
 
 window.toggleSettingsMenu = function() {
